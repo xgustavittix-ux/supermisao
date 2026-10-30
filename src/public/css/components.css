@@ -1,0 +1,706 @@
+/* ==========================================================================
+   GUSTAVIX - COMPONENTES E CARDS (ESTÉTICA ESPACIAL 8 ANOS)
+   ========================================================================== */
+
+/* Seção de Banner / Progresso Diário */
+.progress-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.progress-title {
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+}
+
+.progress-percent {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--color-cyan);
+}
+
+.progress-track {
+  width: 100%;
+  height: 10px;
+  background: var(--bg-cosmos);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-cyan), var(--color-purple));
+  border-radius: var(--radius-full);
+  transition: width 0.4s ease;
+}
+
+/* Check-in Emocional (Radar do Astronauta - Energia + Múltiplas Emoções) */
+.emotion-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.emotion-sublabel {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* 1. Medidor de Bateria / Energia */
+.energy-bar-selector {
+  display: flex;
+  gap: 8px;
+}
+
+.energy-btn {
+  flex: 1;
+  padding: 8px 4px;
+  background: var(--bg-cosmos);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.energy-btn .energy-icon {
+  font-size: 18px;
+}
+
+.energy-btn:hover, .energy-btn.selected {
+  border-color: var(--color-cyan);
+  background: rgba(0, 240, 255, 0.12);
+  color: var(--color-cyan);
+}
+
+/* 2. Grade de Emoções com Seleção Múltipla */
+.emotions-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  max-height: 220px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+/* Scrollbar estilizada */
+.emotions-grid::-webkit-scrollbar {
+  width: 4px;
+}
+.emotions-grid::-webkit-scrollbar-thumb {
+  background: var(--border-subtle);
+  border-radius: 4px;
+}
+
+.mood-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px 2px;
+  background: var(--bg-cosmos);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  user-select: none;
+}
+
+.mood-chip .mood-icon {
+  font-size: 20px;
+}
+
+.mood-chip:hover {
+  border-color: rgba(0, 240, 255, 0.4);
+}
+
+.mood-chip.selected {
+  background: rgba(0, 240, 255, 0.15);
+  border-color: var(--color-cyan);
+  color: var(--text-primary);
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+  transform: scale(0.96);
+}
+
+/* Rodapé do Diário Emocional */
+.emotion-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 10px;
+}
+
+.selected-counter {
+  font-size: 11px;
+  color: var(--color-cyan);
+  font-weight: 700;
+}
+
+.btn-save-emotion {
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  border: none;
+  background: var(--color-cyan);
+  color: var(--bg-void);
+  font-weight: 700;
+  font-size: 11px;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.btn-save-emotion:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Filtro de Período (Manhã e Noite para 8 anos / Escola de Tarde) */
+.period-tabs {
+  display: flex;
+  background: var(--bg-card);
+  padding: 4px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  gap: 4px;
+}
+
+.period-tab {
+  flex: 1;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-weight: 700;
+  font-size: 13px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.period-tab.active {
+  background: var(--color-cyan);
+  color: var(--bg-void);
+}
+
+/* Lista de Missões */
+.missions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mission-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.mission-item:hover {
+  border-color: rgba(0, 240, 255, 0.4);
+}
+
+.mission-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mission-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-md);
+  background: var(--bg-cosmos);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.mission-details h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.mission-details .tag {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.mission-reward {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-gold);
+  margin-top: 4px;
+}
+
+/* Botão de Ação de Conclusão */
+.btn-action {
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-cyan);
+  background: rgba(0, 240, 255, 0.1);
+  color: var(--color-cyan);
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-action:hover:not(:disabled) {
+  background: var(--color-cyan);
+  color: var(--bg-void);
+  box-shadow: var(--shadow-cyan);
+}
+
+.btn-action.pending {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+  background: rgba(255, 208, 67, 0.1);
+  cursor: default;
+}
+
+.btn-action.completed {
+  border-color: var(--color-success);
+  color: var(--color-success);
+  background: rgba(16, 185, 129, 0.1);
+  cursor: default;
+}
+
+/* Modais e Teclado PIN do Responsável */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 14, 23, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.pin-modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  box-shadow: var(--shadow-card);
+}
+
+.pin-display {
+  display: flex;
+  gap: 12px;
+  margin: 10px 0;
+}
+
+.pin-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--border-subtle);
+  transition: all 0.2s ease;
+}
+
+.pin-dot.filled {
+  background: var(--color-cyan);
+  border-color: var(--color-cyan);
+  box-shadow: var(--shadow-cyan);
+}
+
+.pin-keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
+}
+
+.key-btn {
+  background: var(--bg-cosmos);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  font-size: 20px;
+  font-weight: 700;
+  padding: 14px 0;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.key-btn:active {
+  background: var(--color-cyan);
+  color: var(--bg-void);
+}
+
+/* ==========================================================================
+   ZUPI - COMPANHEIRO VIRTUAL ESTELAR (VERSÃO TURBINADA)
+   ========================================================================== */
+
+/* Card principal */
+.zupi-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Header: nome + badge + notif */
+.zupi-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.zupi-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.zupi-subtitle {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--color-gold);
+}
+
+.zupi-love-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: #F472B6;
+  background: rgba(244, 114, 182, 0.12);
+  border: 1px solid rgba(244, 114, 182, 0.35);
+  border-radius: var(--radius-full);
+  padding: 3px 10px;
+}
+
+.zupi-notif-btn {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--color-cyan);
+  background: rgba(0, 240, 255, 0.08);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: var(--radius-full);
+  padding: 3px 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.zupi-notif-btn:hover, .zupi-notif-btn.active {
+  background: rgba(0, 240, 255, 0.2);
+  box-shadow: var(--shadow-cyan);
+}
+
+/* Seção do avatar + balão */
+.zupi-avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Balão de fala */
+.zupi-bubble {
+  background: rgba(0, 240, 255, 0.1);
+  border: 1.5px solid var(--color-cyan);
+  border-radius: var(--radius-lg);
+  padding: 10px 16px;
+  position: relative;
+  max-width: 90%;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-cyan);
+  box-shadow: var(--shadow-cyan);
+  animation: bubble-pulse 4s ease-in-out infinite;
+}
+
+@keyframes bubble-pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(0, 240, 255, 0.25); }
+  50%       { box-shadow: 0 0 18px rgba(0, 240, 255, 0.5); }
+}
+
+.zupi-bubble-tail {
+  position: absolute;
+  bottom: -9px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0; height: 0;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-top: 9px solid var(--color-cyan);
+}
+
+/* Avatar central */
+.zupi-avatar {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.zupi-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,240,255,0.18) 0%, transparent 70%);
+  animation: zupi-glow-pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes zupi-glow-pulse {
+  0%, 100% { transform: scale(1);   opacity: 0.6; }
+  50%       { transform: scale(1.15); opacity: 1; }
+}
+
+.zupi-emoji {
+  font-size: 72px;
+  position: relative;
+  z-index: 1;
+  transition: transform 0.2s ease;
+  animation: zupi-float 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 20px rgba(0, 240, 255, 0.4));
+  user-select: none;
+}
+
+/* Avatar real (imagem) do Zupi */
+.zupi-avatar-real {
+  width: 140px;
+  height: 140px;
+  object-fit: contain;
+  object-position: top center;
+  position: relative;
+  z-index: 1;
+  animation: zupi-float 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 22px rgba(0, 240, 255, 0.45));
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  user-select: none;
+  cursor: pointer;
+}
+
+.zupi-avatar-real.reacting {
+  animation: zupi-shake 0.5s ease;
+}
+
+@keyframes zupi-float {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50%       { transform: translateY(-8px) rotate(2deg); }
+}
+
+/* Partículas de reação */
+.zupi-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.zupi-particle {
+  position: absolute;
+  font-size: 18px;
+  animation: particle-fly 0.9s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes particle-fly {
+  0%   { transform: translate(0,0) scale(1); opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; }
+}
+
+/* Tag de humor */
+.zupi-mood-tag {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  background: var(--bg-cosmos);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  padding: 4px 14px;
+  transition: all 0.4s ease;
+}
+
+/* Barras de necessidades */
+.zupi-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  background: var(--bg-cosmos);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 14px;
+}
+
+.zupi-stat-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.zupi-stat-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  min-width: 85px;
+}
+
+.zupi-stat-icon {
+  font-size: 14px;
+}
+
+.zupi-bar-track {
+  flex: 1;
+  height: 7px;
+  background: rgba(255,255,255,0.05);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+}
+
+.zupi-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.zupi-stat-val {
+  font-size: 11px;
+  font-weight: 800;
+  min-width: 30px;
+  text-align: right;
+}
+
+/* Botões de ação (grid 4x2) */
+.zupi-actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.zupi-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 4px;
+  background: var(--bg-cosmos);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  user-select: none;
+}
+
+.zupi-btn-icon {
+  font-size: 22px;
+}
+
+.zupi-btn:hover {
+  border-color: var(--color-cyan);
+  background: rgba(0, 240, 255, 0.1);
+  color: var(--color-cyan);
+  transform: translateY(-2px);
+}
+
+.zupi-btn:active {
+  transform: scale(0.92);
+  background: rgba(0, 240, 255, 0.2);
+}
+
+/* Shake animation ao clicar */
+@keyframes zupi-shake {
+  0%, 100% { transform: rotate(0deg); }
+  20%       { transform: rotate(-15deg) scale(1.15); }
+  40%       { transform: rotate(15deg) scale(1.2); }
+  60%       { transform: rotate(-10deg) scale(1.1); }
+  80%       { transform: rotate(8deg); }
+}
+
+.zupi-emoji.reacting {
+  animation: zupi-shake 0.5s ease;
+}
+
+/* Dica/Conquista do Zupi */
+.zupi-tip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(138, 43, 226, 0.1);
+  border: 1px solid rgba(138, 43, 226, 0.3);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  font-size: 12px;
+  color: #A78BFA;
+  font-weight: 600;
+}
+
+.zupi-tip-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}

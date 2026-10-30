@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0B0E17">
+  <title>Super Missões Gustavitti - Gustavix</title>
+  
+  <!-- Manifest PWA -->
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/assets/icon-192.png">
+
+  <!-- Fontes Google: Space Grotesk -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="/css/design-system.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
+</head>
+<body>
+
+  <div class="app-viewport">
+    
+    <!-- Header Superior do Astronauta -->
+    <header class="app-header">
+      <div class="profile-badge">
+        <div class="profile-avatar-img" id="header-avatar-wrap">
+          <img id="header-avatar-img" src="/assets/bra%C3%A7o%20cruzado%20com%20sorriso.png" alt="Gustavitti" class="avatar-img">
+        </div>
+        <div class="profile-info">
+          <h1>Gustavitti</h1>
+          <span class="rank" id="astronaut-rank">Explorador Lunar • Nível 1</span>
+        </div>
+      </div>
+      <div class="coin-counter">
+        <span class="coin-icon">🪙</span>
+        <span class="coin-amount" id="coin-balance">0</span>
+      </div>
+    </header>
+
+    <!-- Conteúdo Principal Dinâmico -->
+    <main class="main-content" id="app-content">
+      
+      <!-- ABA 1: MISSÕES -->
+      <div id="view-missions" class="view-panel active">
+        <!-- Progresso Diário -->
+        <section class="progress-card">
+          <div class="progress-header">
+            <span class="progress-title">Progresso Diário</span>
+            <span class="progress-percent" id="progress-percent">0%</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
+          </div>
+        </section>
+
+        <!-- Seletor de Período (Manhã, Tarde e Noite) -->
+        <div class="period-tabs" style="margin-top: 16px;">
+          <button class="period-tab active" data-period="manha">☀️ Manhã</button>
+          <button class="period-tab" data-period="tarde">🎒 Tarde</button>
+          <button class="period-tab" data-period="noite">🌙 Noite</button>
+        </div>
+
+        <!-- Lista de Missões -->
+        <section style="margin-top: 16px;">
+          <div class="section-label" style="margin-bottom: 12px;">🎯 Missões Disponíveis</div>
+          <div class="missions-list" id="missions-container">
+            <!-- Carregado via JS -->
+          </div>
+        </section>
+      </div>
+
+      <!-- ABA 2: RECOMPENSAS (LOJA) -->
+      <div id="view-shop" class="view-panel" style="display: none;">
+        <div class="progress-card" style="margin-bottom: 16px;">
+          <div class="progress-header">
+            <span class="progress-title">⭐ Loja de Recompensas</span>
+            <span class="rank" style="color: var(--color-gold);">Saldo: <span id="shop-balance-display">0</span> moedas</span>
+          </div>
+          <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Escolha suas recompensas combinadas em família. Cada resgate é validado pelos seus pais.</p>
+        </div>
+        <div class="missions-list" id="rewards-container">
+          <!-- Carregado via JS -->
+        </div>
+      </div>
+
+      <!-- ABA 3: HUMOR -->
+      <div id="view-diary" class="view-panel" style="display: none;">
+        <!-- Radar de Humor: Autoconhecimento & Emoções -->
+        <section class="emotion-card">
+
+          <!-- PARTE 1: Três Indicadores Rápidos -->
+          <div>
+            <span class="section-label">⭐ 1. Como foi seu dia hoje?</span>
+            <div class="energy-bar-selector" id="day-score-selector" style="margin-top: 8px;">
+              <button class="energy-btn" data-dayscore="ruim"><span class="energy-icon">😞</span><span>Difícil</span></button>
+              <button class="energy-btn" data-dayscore="dificil"><span class="energy-icon">😕</span><span>Chato</span></button>
+              <button class="energy-btn" data-dayscore="neutro"><span class="energy-icon">😐</span><span>Normal</span></button>
+              <button class="energy-btn selected" data-dayscore="bom"><span class="energy-icon">🙂</span><span>Legal</span></button>
+              <button class="energy-btn" data-dayscore="otimo"><span class="energy-icon">🤩</span><span>Incrível!</span></button>
+            </div>
+          </div>
+
+          <div>
+            <span class="section-label">⚡ 2. Quanta energia você tem agora?</span>
+            <div class="energy-bar-selector" id="energy-selector" style="margin-top: 8px;">
+              <button class="energy-btn" data-energy="esgotada"><span class="energy-icon">🪫</span><span>Zero</span></button>
+              <button class="energy-btn" data-energy="baixa"><span class="energy-icon">💤</span><span>Baixa</span></button>
+              <button class="energy-btn" data-energy="media"><span class="energy-icon">🔋</span><span>Média</span></button>
+              <button class="energy-btn selected" data-energy="boa"><span class="energy-icon">🚀</span><span>Boa</span></button>
+              <button class="energy-btn" data-energy="maxima"><span class="energy-icon">☀️</span><span>Máxima</span></button>
+            </div>
+          </div>
+
+          <div>
+            <span class="section-label">💚 3. Você se sentiu acolhido e escutado hoje?</span>
+            <div class="energy-bar-selector" id="feeling-heard-selector" style="margin-top: 8px;">
+              <button class="energy-btn" data-heard="nada"><span class="energy-icon">🙁</span><span>Não</span></button>
+              <button class="energy-btn" data-heard="pouco"><span class="energy-icon">😕</span><span>Pouco</span></button>
+              <button class="energy-btn" data-heard="mais_ou_menos"><span class="energy-icon">😐</span><span>Mais/Menos</span></button>
+              <button class="energy-btn selected" data-heard="sim"><span class="energy-icon">🙂</span><span>Sim</span></button>
+              <button class="energy-btn" data-heard="muito"><span class="energy-icon">💚</span><span>Muito!</span></button>
+            </div>
+          </div>
+
+          <!-- PARTE 2: Catálogo Completo de Emoções por Categoria -->
+          <div>
+            <span class="section-label">🌌 4. Identifique suas emoções (Marque quantas quiser)</span>
+            <p class="emotion-sublabel">Você pode estar feliz e cansado ao mesmo tempo!</p>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <!-- Emoções Agradáveis -->
+            <div>
+              <span style="font-size: 11px; font-weight: 700; color: var(--color-cyan);">✨ Emoções Agradáveis</span>
+              <div class="emotions-grid" style="max-height: none; margin-top: 6px;">
+                <button class="mood-chip" data-mood="Feliz"><span class="mood-icon">😄</span><span>Feliz</span></button>
+                <button class="mood-chip" data-mood="Animado"><span class="mood-icon">🚀</span><span>Animado</span></button>
+                <button class="mood-chip" data-mood="Amado"><span class="mood-icon">💖</span><span>Amado</span></button>
+                <button class="mood-chip" data-mood="Acolhido"><span class="mood-icon">🤗</span><span>Acolhido</span></button>
+                <button class="mood-chip" data-mood="Orgulhoso"><span class="mood-icon">🏆</span><span>Orgulhoso</span></button>
+                <button class="mood-chip" data-mood="Esperançoso"><span class="mood-icon">🌈</span><span>Esperançoso</span></button>
+                <button class="mood-chip" data-mood="Curioso"><span class="mood-icon">🔎</span><span>Curioso</span></button>
+                <button class="mood-chip" data-mood="Inspirado"><span class="mood-icon">💡</span><span>Inspirado</span></button>
+                <button class="mood-chip" data-mood="Grato"><span class="mood-icon">🙏</span><span>Grato</span></button>
+                <button class="mood-chip" data-mood="Aliviado"><span class="mood-icon">😌</span><span>Aliviado</span></button>
+                <button class="mood-chip" data-mood="Confiante"><span class="mood-icon">💪</span><span>Confiante</span></button>
+                <button class="mood-chip" data-mood="Calmo"><span class="mood-icon">🍃</span><span>Calmo</span></button>
+              </div>
+            </div>
+
+            <!-- Emoções Difíceis -->
+            <div>
+              <span style="font-size: 11px; font-weight: 700; color: #F87171;">🌧️ Emoções Difíceis</span>
+              <div class="emotions-grid" style="max-height: none; margin-top: 6px;">
+                <button class="mood-chip" data-mood="Triste"><span class="mood-icon">😢</span><span>Triste</span></button>
+                <button class="mood-chip" data-mood="Frustrado"><span class="mood-icon">😤</span><span>Frustrado</span></button>
+                <button class="mood-chip" data-mood="Decepcionado"><span class="mood-icon">😞</span><span>Decepcionado</span></button>
+                <button class="mood-chip" data-mood="Solitário"><span class="mood-icon">🧍</span><span>Solitário</span></button>
+                <button class="mood-chip" data-mood="Envergonhado"><span class="mood-icon">😳</span><span>Envergonhado</span></button>
+                <button class="mood-chip" data-mood="Culpado"><span class="mood-icon">😔</span><span>Culpado</span></button>
+                <button class="mood-chip" data-mood="Com saudade"><span class="mood-icon">💭</span><span>Saudade</span></button>
+                <button class="mood-chip" data-mood="Desanimado"><span class="mood-icon">🥀</span><span>Desanimado</span></button>
+                <button class="mood-chip" data-mood="Desamparado"><span class="mood-icon">🌧️</span><span>Desamparado</span></button>
+              </div>
+            </div>
+
+            <!-- Estados de Alerta -->
+            <div>
+              <span style="font-size: 11px; font-weight: 700; color: var(--color-gold);">⚡ Estados de Alerta</span>
+              <div class="emotions-grid" style="max-height: none; margin-top: 6px;">
+                <button class="mood-chip" data-mood="Ansioso"><span class="mood-icon">🌀</span><span>Ansioso</span></button>
+                <button class="mood-chip" data-mood="Preocupado"><span class="mood-icon">😟</span><span>Preocupado</span></button>
+                <button class="mood-chip" data-mood="Confuso"><span class="mood-icon">🤔</span><span>Confuso</span></button>
+                <button class="mood-chip" data-mood="Inseguro"><span class="mood-icon">🌪️</span><span>Inseguro</span></button>
+                <button class="mood-chip" data-mood="Bravo/Irritado"><span class="mood-icon">⚡</span><span>Bravo</span></button>
+                <button class="mood-chip" data-mood="Impaciente"><span class="mood-icon">⏱️</span><span>Impaciente</span></button>
+                <button class="mood-chip" data-mood="Sobrecarregado"><span class="mood-icon">🌋</span><span>Cheio</span></button>
+                <button class="mood-chip" data-mood="Assustado"><span class="mood-icon">😨</span><span>Assustado</span></button>
+              </div>
+            </div>
+
+            <!-- Estados Físicos -->
+            <div>
+              <span style="font-size: 11px; font-weight: 700; color: #A78BFA;">🔋 Estados Físicos</span>
+              <div class="emotions-grid" style="max-height: none; margin-top: 6px;">
+                <button class="mood-chip" data-mood="Descansado"><span class="mood-icon">✨</span><span>Descansado</span></button>
+                <button class="mood-chip" data-mood="Cansado"><span class="mood-icon">🔋</span><span>Cansado</span></button>
+                <button class="mood-chip" data-mood="Sonolento"><span class="mood-icon">🌙</span><span>Sonolento</span></button>
+                <button class="mood-chip" data-mood="Com fome"><span class="mood-icon">🍎</span><span>Com fome</span></button>
+                <button class="mood-chip" data-mood="Agitado"><span class="mood-icon">🏃</span><span>Agitado</span></button>
+                <button class="mood-chip" data-mood="Relaxado"><span class="mood-icon">🧘</span><span>Relaxado</span></button>
+                <button class="mood-chip" data-mood="Preciso de pausa"><span class="mood-icon">⏸️</span><span>Pausa</span></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- PARTE 3: O que aconteceu hoje? (Contexto Opcional) -->
+          <div style="margin-top: 10px;">
+            <span class="section-label">🪐 5. Qual foi o motivo desses sentimentos?</span>
+            <p class="emotion-sublabel">Selecione ou pule se não souber:</p>
+            <div class="emotions-grid" style="max-height: none; margin-top: 6px;" id="reasons-grid">
+              <button class="mood-chip reason-chip" data-reason="Escola"><span class="mood-icon">🏫</span><span>Escola</span></button>
+              <button class="mood-chip reason-chip" data-reason="Família"><span class="mood-icon">👨‍👩‍👦</span><span>Família</span></button>
+              <button class="mood-chip reason-chip" data-reason="Amigos"><span class="mood-icon">🧑‍🤝‍🧑</span><span>Amigos</span></button>
+              <button class="mood-chip reason-chip" data-reason="Brincadeiras"><span class="mood-icon">🎮</span><span>Brincadeiras</span></button>
+              <button class="mood-chip reason-chip" data-reason="Uma conquista"><span class="mood-icon">🏆</span><span>Conquista</span></button>
+              <button class="mood-chip reason-chip" data-reason="Uma conversa"><span class="mood-icon">💬</span><span>Conversa</span></button>
+              <button class="mood-chip reason-chip" data-reason="Algo inesperado"><span class="mood-icon">⚡</span><span>Inesperado</span></button>
+              <button class="mood-chip reason-chip" data-reason="Não sei explicar"><span class="mood-icon">💭</span><span>Não sei</span></button>
+              <button class="mood-chip reason-chip" data-reason="Várias coisas"><span class="mood-icon">🌈</span><span>Várias coisas</span></button>
+            </div>
+          </div>
+
+          <!-- PARTE 4: O que você precisa agora? (Autocuidado) -->
+          <div style="margin-top: 10px;">
+            <span class="section-label">🛸 6. Do que você precisa agora?</span>
+            <p class="emotion-sublabel">Como podemos te acolher melhor?</p>
+            <div class="emotions-grid" style="max-height: none; margin-top: 6px;" id="needs-grid">
+              <button class="mood-chip need-chip" data-need="Um abraço"><span class="mood-icon">🤗</span><span>Abraço</span></button>
+              <button class="mood-chip need-chip" data-need="Conversar"><span class="mood-icon">🗣️</span><span>Conversar</span></button>
+              <button class="mood-chip need-chip" data-need="Ficar sozinho"><span class="mood-icon">🧘</span><span>Um tempo</span></button>
+              <button class="mood-chip need-chip" data-need="Brincar e me divertir"><span class="mood-icon">🎮</span><span>Brincar</span></button>
+              <button class="mood-chip need-chip" data-need="Descansar"><span class="mood-icon">😴</span><span>Descansar</span></button>
+              <button class="mood-chip need-chip" data-need="Ajuda para resolver"><span class="mood-icon">🧩</span><span>Ajuda</span></button>
+              <button class="mood-chip need-chip" data-need="Água ou lanche"><span class="mood-icon">💧</span><span>Comer/Beber</span></button>
+              <button class="mood-chip need-chip" data-need="Que me escutem"><span class="mood-icon">🫶</span><span>Me escutem</span></button>
+              <button class="mood-chip need-chip" data-need="Me acalmar"><span class="mood-icon">🌬️</span><span>Respirar</span></button>
+            </div>
+          </div>
+
+          <!-- PARTE 5: Uma coisa boa do dia -->
+          <div style="margin-top: 10px;">
+            <span class="section-label">🌟 7. Uma coisa legal que aconteceu hoje:</span>
+            <input type="text" id="input-good-thing" placeholder="Ex: Brinquei no recreio, aprendi algo novo..." style="width: 100%; background: var(--bg-cosmos); border: 1px solid var(--border-subtle); color: var(--text-primary); padding: 10px; border-radius: var(--radius-sm); font-size: 12px; margin-top: 6px;">
+          </div>
+
+          <div class="emotion-footer" style="margin-top: 16px;">
+            <span class="selected-counter" id="selected-counter">0 emoção(ões) selecionada(s)</span>
+            <button class="btn-save-emotion" id="btn-save-emotion" disabled>Registrar no Diário de Bordo 🚀</button>
+          </div>
+        </section>
+      </div>
+
+      <!-- ABA 4: COMPANHEIRO VIRTUAL ZUPI -->
+      <div id="view-pet" class="view-panel" style="display: none;">
+
+        <!-- Card Principal do Zupi -->
+        <div class="zupi-card">
+
+          <!-- Header do Zupi: Nome + Nível de Amor -->
+          <div class="zupi-header">
+            <div>
+              <h2 id="pet-name" class="zupi-title">Zupi</h2>
+              <span class="zupi-subtitle">Companheiro Estelar ✨</span>
+            </div>
+            <div class="zupi-love-badge" id="zupi-love-badge">❤️ Amor: 85%</div>
+          </div>
+
+          <!-- Avatar do Zupi com Balão de Fala -->
+          <div class="zupi-avatar-section">
+            <!-- Balão de Fala -->
+            <div class="zupi-bubble" id="pet-thought-bubble">
+              <span id="pet-thought-text">"Oi, Gustavitti! Pronto pra dominar o cosmos hoje? 🚀"</span>
+              <div class="zupi-bubble-tail"></div>
+            </div>
+
+            <!-- Avatar real como Zupi (imagem dinâmica com 3 poses) -->
+            <div id="pet-avatar-container" class="zupi-avatar">
+              <div class="zupi-glow"></div>
+              <img
+                id="zupi-avatar-img"
+                src="/assets/bra%C3%A7o%20cruzado%20com%20sorriso.png"
+                alt="Zupi"
+                class="zupi-avatar-real"
+              >
+              <div class="zupi-particles" id="zupi-particles"></div>
+            </div>
+
+            <!-- Estado de humor abaixo do avatar -->
+            <div class="zupi-mood-tag" id="zupi-mood-tag">😊 Feliz e animado!</div>
+          </div>
+
+          <!-- Barras de Necessidades -->
+          <div class="zupi-stats">
+            <div class="zupi-stat-row">
+              <span class="zupi-stat-label"><span class="zupi-stat-icon">💖</span>Felicidade</span>
+              <div class="zupi-bar-track"><div class="zupi-bar-fill" id="pet-happiness-bar" style="width:85%; background:#F472B6"></div></div>
+              <span class="zupi-stat-val" id="pet-happiness-val" style="color:#F472B6">85%</span>
+            </div>
+            <div class="zupi-stat-row">
+              <span class="zupi-stat-label"><span class="zupi-stat-icon">⚡</span>Energia</span>
+              <div class="zupi-bar-track"><div class="zupi-bar-fill" id="pet-energy-bar" style="width:75%; background:var(--color-gold)"></div></div>
+              <span class="zupi-stat-val" id="pet-energy-val" style="color:var(--color-gold)">75%</span>
+            </div>
+            <div class="zupi-stat-row">
+              <span class="zupi-stat-label"><span class="zupi-stat-icon">💧</span>Hidratação</span>
+              <div class="zupi-bar-track"><div class="zupi-bar-fill" id="pet-hydration-bar" style="width:60%; background:var(--color-cyan)"></div></div>
+              <span class="zupi-stat-val" id="pet-hydration-val" style="color:var(--color-cyan)">60%</span>
+            </div>
+            <div class="zupi-stat-row">
+              <span class="zupi-stat-label"><span class="zupi-stat-icon">🍎</span>Alimentação</span>
+              <div class="zupi-bar-track"><div class="zupi-bar-fill" id="pet-hunger-bar" style="width:60%; background:#34D399"></div></div>
+              <span class="zupi-stat-val" id="pet-hunger-val" style="color:#34D399">60%</span>
+            </div>
+            <div class="zupi-stat-row">
+              <span class="zupi-stat-label"><span class="zupi-stat-icon">💜</span>Atenção</span>
+              <div class="zupi-bar-track"><div class="zupi-bar-fill" id="pet-attention-bar" style="width:65%; background:#A78BFA"></div></div>
+              <span class="zupi-stat-val" id="pet-attention-val" style="color:#A78BFA">65%</span>
+            </div>
+          </div>
+
+          <!-- Botões de Interação -->
+          <div class="zupi-actions">
+            <button class="zupi-btn pet-action-btn" data-action="water" data-sound="water">
+              <span class="zupi-btn-icon">💧</span>
+              <span>Água</span>
+            </button>
+            <button class="zupi-btn pet-action-btn" data-action="food" data-sound="food">
+              <span class="zupi-btn-icon">🍎</span>
+              <span>Comer</span>
+            </button>
+            <button class="zupi-btn pet-action-btn" data-action="play" data-sound="play">
+              <span class="zupi-btn-icon">🎮</span>
+              <span>Brincar</span>
+            </button>
+            <button class="zupi-btn pet-action-btn" data-action="pet" data-sound="pet">
+              <span class="zupi-btn-icon">💜</span>
+              <span>Carinho</span>
+            </button>
+            <button class="zupi-btn pet-action-btn" data-action="sleep" data-sound="sleep">
+              <span class="zupi-btn-icon">🌙</span>
+              <span>Dormir</span>
+            </button>
+            <button class="zupi-btn pet-action-btn" data-action="sing" data-sound="sing">
+              <span class="zupi-btn-icon">🎵</span>
+              <span>Música</span>
+            </button>
+            <button class="zupi-btn pet-action-btn" data-action="explore" data-sound="explore">
+              <span class="zupi-btn-icon">🚀</span>
+              <span>Explorar</span>
+            </button>
+            <button class="zupi-btn pet-action-btn" data-action="exercise" data-sound="play">
+              <span class="zupi-btn-icon">🏃</span>
+              <span>Exercitar</span>
+            </button>
+          </div>
+
+          <!-- Dica do Zupi / Conquistas -->
+          <div class="zupi-tip" id="zupi-tip">
+            <span class="zupi-tip-icon">💡</span>
+            <span id="zupi-tip-text">Toque no Zupi para dar carinho espontâneo!</span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ABA 5: CENTRAL DE COMANDO DOS PAIS -->
+      <div id="view-command" class="view-panel" style="display: none;">
+        <div class="progress-card" style="margin-bottom: 16px; border-color: var(--color-cyan);">
+          <div class="progress-header">
+            <span class="progress-title" style="color: var(--color-cyan);">🔒 Central de Comando dos Pais</span>
+            <button class="btn-action" style="padding: 4px 10px; font-size: 11px;" id="btn-logout-command">Sair</button>
+          </div>
+          <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Gerenciamento de missões, aprovação de moedas e auditoria de Gustavitti.</p>
+        </div>
+
+        <!-- Validação de Missões Pendentes -->
+        <section style="margin-bottom: 20px;">
+          <div class="section-label" style="margin-bottom: 12px;">⏳ Missões Aguardando Validação</div>
+          <div id="command-pending-missions" class="missions-list">
+            <p style="color: var(--text-muted); font-size: 12px; text-align: center; padding: 20px;">Nenhuma missão pendente no momento. 🚀</p>
+          </div>
+        </section>
+
+        <!-- Resgates Pendentes -->
+        <section style="margin-bottom: 20px;">
+          <div class="section-label" style="margin-bottom: 12px;">🎁 Resgates Aguardando Aprovação</div>
+          <div id="command-pending-rewards" class="missions-list">
+            <p style="color: var(--text-muted); font-size: 12px; text-align: center; padding: 20px;">Nenhum resgate pendente.</p>
+          </div>
+        </section>
+
+        <!-- FERRAMENTA 1: Adicionar Missão Relâmpago Instantânea -->
+        <section style="margin-bottom: 20px;" class="progress-card">
+          <div class="section-label" style="margin-bottom: 10px; color: var(--color-cyan);">⚡ Lançar Missão Relâmpago</div>
+          <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">Crie uma missão imediata de oportunidade (ex: "Ajudar a guardar as compras do mercado").</p>
+          
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <input type="text" id="input-flash-title" placeholder="Nome da Missão Relâmpago..." style="background: var(--bg-cosmos); border: 1px solid var(--border-subtle); color: var(--text-primary); padding: 10px; border-radius: var(--radius-sm); font-size: 13px;">
+            
+            <div style="display: flex; gap: 8px;">
+              <select id="select-flash-period" style="flex: 1; background: var(--bg-cosmos); border: 1px solid var(--border-subtle); color: var(--text-primary); padding: 8px; border-radius: var(--radius-sm); font-size: 12px;">
+                <option value="qualquer">Qualquer Período</option>
+                <option value="manha">☀️ Manhã</option>
+                <option value="tarde">🎒 Tarde</option>
+                <option value="noite">🌙 Noite</option>
+              </select>
+              <input type="number" id="input-flash-coins" placeholder="Moedas (ex: 5)" style="width: 110px; background: var(--bg-cosmos); border: 1px solid var(--border-subtle); color: var(--text-primary); padding: 8px; border-radius: var(--radius-sm); font-size: 12px;">
+            </div>
+
+            <button class="btn-action" id="btn-create-flash-mission" style="margin-top: 6px; padding: 10px; background: var(--color-cyan); color: var(--bg-void); border: none;">+ Lançar Missão Agora</button>
+          </div>
+        </section>
+
+        <!-- GERENCIADOR DE TODAS AS MISSÕES (EDITAR / EXCLUIR) -->
+        <section style="margin-bottom: 20px;" class="progress-card">
+          <div class="section-label" style="margin-bottom: 10px; color: var(--color-cyan);">🛠️ Configurar & Editar Missões Ativas</div>
+          <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">Altere horários (Manhã, Tarde, Noite) ou a pontuação de cada missão.</p>
+          <div id="command-manage-missions-list" class="missions-list">
+            <!-- Carregado via JS com campos de edição -->
+          </div>
+        </section>
+
+        <!-- FERRAMENTA 2: Cadastrar Nova Recompensa na Loja -->
+        <section style="margin-bottom: 20px;" class="progress-card">
+          <div class="section-label" style="margin-bottom: 10px; color: var(--color-gold);">⭐ Configurar Nova Recompensa</div>
+          <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">Cadastre itens ou privilégios combinados para Gustavitti resgatar na loja.</p>
+          
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <input type="text" id="input-reward-title" placeholder="Nome do privilégio / prêmio..." style="background: var(--bg-cosmos); border: 1px solid var(--border-subtle); color: var(--text-primary); padding: 10px; border-radius: var(--radius-sm); font-size: 13px;">
+            
+            <div style="display: flex; gap: 8px;">
+              <select id="select-reward-category" style="flex: 1; background: var(--bg-cosmos); border: 1px solid var(--border-subtle); color: var(--text-primary); padding: 8px; border-radius: var(--radius-sm); font-size: 12px;">
+                <option value="Privilégio">Privilégio Familiar</option>
+                <option value="Atividade">Noite de Jogos / Telas</option>
+                <option value="Passeio">Passeio no Fim de Semana</option>
+                <option value="Presente">Presente Físico</option>
+              </select>
+              <input type="number" id="input-reward-cost" placeholder="Custo Moedas" style="width: 120px; background: var(--bg-cosmos); border: 1px solid var(--border-subtle); color: var(--text-primary); padding: 8px; border-radius: var(--radius-sm); font-size: 12px;">
+            </div>
+
+            <button class="btn-action" id="btn-create-reward" style="margin-top: 6px; padding: 10px; background: var(--color-gold); color: var(--bg-void); border: none;">+ Adicionar na Loja</button>
+          </div>
+        </section>
+
+        <!-- GERENCIADOR DE RECOMPENSAS DA LOJA (EDITAR / EXCLUIR) -->
+        <section style="margin-bottom: 20px;" class="progress-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <div class="section-label" style="color: var(--color-gold);">🏷️ Editar Custos & Recompensas Ativas</div>
+            <button class="btn-action" id="btn-seed-rewards" style="padding: 4px 8px; font-size: 10px; background: rgba(255, 208, 67, 0.15); border-color: var(--color-gold); color: var(--color-gold);">✨ Restaurar Sugestões</button>
+          </div>
+          <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">Ajuste o valor em moedas de cada item da loja conforme o progresso dele.</p>
+          <div id="command-manage-rewards-list" class="missions-list">
+            <!-- Carregado via JS -->
+          </div>
+        </section>
+
+        <!-- CONTROLE DE NOTIFICAÇÕES (EXCLUSIVO DOS PAIS) -->
+        <section style="margin-bottom: 20px;" class="progress-card" style="border-color: #8B5CF6;">
+          <div class="section-label" style="margin-bottom: 10px; color: #A78BFA;">🔔 Notificações do Zupi & Lembretes</div>
+          <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">As notificações ficam ativas por padrão para Gustavitti interagir com o Zupi e lembrar das missões. Apenas você pode alterar aqui.</p>
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: var(--bg-cosmos); border-radius: var(--radius-sm); margin-bottom: 10px;">
+            <div>
+              <strong style="font-size: 13px; display: block;" id="parent-notif-status-text">Notificações: Ativadas ✅</strong>
+              <span style="font-size: 11px; color: var(--text-muted);" id="parent-notif-perm-text">Permissão no navegador: Verificando...</span>
+            </div>
+            <button class="btn-action" id="btn-toggle-parent-notif" style="padding: 6px 12px; font-size: 11px;">Desativar</button>
+          </div>
+          <button class="btn-action" id="btn-test-notif" style="width: 100%; padding: 8px; font-size: 12px; border-color: #A78BFA; color: #A78BFA; background: rgba(167, 139, 250, 0.1);">🚀 Disparar Notificação de Teste</button>
+        </section>
+
+        <!-- Histórico Exclusivo do Diário Emocional (Privado para os Pais) -->
+        <section style="margin-bottom: 20px;">
+          <div class="section-label" style="margin-bottom: 12px;">🛰️ Histórico do Diário Emocional (Apenas Pais)</div>
+          <div id="emotions-history-list" class="missions-list">
+            <!-- Carregado via JS -->
+          </div>
+        </section>
+
+        <!-- Extrato Financeiro -->
+        <section>
+          <div class="section-label" style="margin-bottom: 12px;">📜 Extrato Imutável de Moedas</div>
+          <div id="command-ledger" class="missions-list">
+            <!-- Transações carregadas via JS -->
+          </div>
+        </section>
+      </div>
+
+    </main>
+
+    <!-- Barra de Navegação Inferior (Mobile-First) -->
+    <nav class="bottom-nav">
+      <button class="nav-item active" id="nav-missions">
+        <span class="nav-icon">🪐</span>
+        <span>Missões</span>
+      </button>
+      <button class="nav-item" id="nav-shop">
+        <span class="nav-icon">⭐</span>
+        <span>Recompensas</span>
+      </button>
+      <button class="nav-item" id="nav-stats">
+        <span class="nav-icon">💬</span>
+        <span>Humor</span>
+      </button>
+      <button class="nav-item" id="nav-pet">
+        <span class="nav-icon">👾</span>
+        <span>Zupi</span>
+      </button>
+      <button class="nav-item" id="nav-admin">
+        <span class="nav-icon">🔒</span>
+        <span>Comando</span>
+      </button>
+    </nav>
+
+    <!-- Modal de PIN da Central de Comando (Pais) -->
+    <div class="modal-overlay" id="pin-modal-overlay">
+      <div class="pin-modal">
+        <div style="font-size: 28px;">🔐</div>
+        <h3 style="font-size: 16px; font-weight: 700;">Central de Comando</h3>
+        <p style="font-size: 12px; color: var(--text-muted); text-align: center;">Digite o PIN do responsável para autorizar missões e gerenciar regras</p>
+        
+        <div class="pin-display">
+          <div class="pin-dot" id="dot-1"></div>
+          <div class="pin-dot" id="dot-2"></div>
+          <div class="pin-dot" id="dot-3"></div>
+          <div class="pin-dot" id="dot-4"></div>
+        </div>
+
+        <div class="pin-keypad" id="pin-keypad">
+          <button class="key-btn" data-key="1">1</button>
+          <button class="key-btn" data-key="2">2</button>
+          <button class="key-btn" data-key="3">3</button>
+          <button class="key-btn" data-key="4">4</button>
+          <button class="key-btn" data-key="5">5</button>
+          <button class="key-btn" data-key="6">6</button>
+          <button class="key-btn" data-key="7">7</button>
+          <button class="key-btn" data-key="8">8</button>
+          <button class="key-btn" data-key="9">9</button>
+          <button class="key-btn" data-key="cancel">✕</button>
+          <button class="key-btn" data-key="0">0</button>
+          <button class="key-btn" data-key="backspace">⌫</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="/js/api.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

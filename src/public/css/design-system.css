@@ -1,0 +1,85 @@
+/* ==========================================================================
+   GUSTAVIX DESIGN SYSTEM - COCKPIT ESPACIAL MODERNO (8 ANOS)
+   Paleta: Void Black, Hyperdrive Cyan, Stellar Gold, Nebula Purple
+   ========================================================================== */
+
+:root {
+  /* Cores Base */
+  --bg-void: #0B0E17;
+  --bg-cosmos: #121826;
+  --bg-card: #182032;
+  --bg-card-hover: #1F2A42;
+  --bg-surface-glass: rgba(24, 32, 50, 0.75);
+
+  /* Bordas sutis */
+  --border-subtle: #232E4A;
+  --border-focus: #00F0FF;
+
+  /* Acentos Funcionais */
+  --color-cyan: #00F0FF;
+  --color-cyan-glow: rgba(0, 240, 255, 0.25);
+  --color-gold: #FFD043;
+  --color-gold-glow: rgba(255, 208, 67, 0.25);
+  --color-purple: #8A2BE2;
+  --color-purple-glow: rgba(138, 43, 226, 0.25);
+  --color-success: #10B981;
+  --color-danger: #EF4444;
+
+  /* Tipografia */
+  --font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --text-primary: #F1F5F9;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+
+  /* Dimensões e Espaçamentos */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+  --max-width-mobile: 480px;
+
+  /* Sombras */
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.4);
+  --shadow-cyan: 0 0 15px var(--color-cyan-glow);
+  --shadow-gold: 0 0 15px var(--color-gold-glow);
+}
+
+/* Reset Global Mobile-First */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: var(--bg-void);
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  overflow-x: hidden;
+  line-height: 1.5;
+}
+
+/* Container que simula tela de smartphone */
+.app-viewport {
+  width: 100%;
+  max-width: var(--max-width-mobile);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-cosmos);
+  position: relative;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.7);
+}
+
+/* Suporte para acessibilidade / redução de movimento */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
