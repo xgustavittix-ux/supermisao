@@ -29,7 +29,7 @@ const connectDB = async () => {
   }
 };
 
-const { Mission, MissionLog, Reward, RewardRedemption, User, Transaction, EmotionalLog, Pet } = require('./src/models');
+const { Mission, MissionLog, Reward, RewardRedemption, User, Transaction, EmotionalLog, Pet, AlertMessage } = require('./src/models');
 
 // Seed Idempotente (Nunca sobrescreve se já houver dados)
 const seedInitialData = async () => {
@@ -562,6 +562,82 @@ app.post('/api/admin/missions/:logId/decide', async (req, res) => {
     }
 
     res.json({ success: true, status: log.status });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// -------------------------------------------------------------
+// SISTEMA DE ALERTAS EM TEMPO REAL (MÃE ➔ FILHO)
+// -------------------------------------------------------------
+
+// Enviar Alerta da Nave Mãe para o Filho
+app.post('/api/alerts', async (req, res) => {
+  try {
+    const { text, sender } = req.body;
+    if (!text || !text.trim()) {
+      return res.status(400).json({ error: 'Texto do alerta é obrigatório' });
+    }
+
+    if (mongoose.connection.readyState === 1) {
+      const alert = await AlertMessage.create({
+        text: text.trim(),
+        sender: sender || 'Nave Mãe'
+      });
+      return res.json({ success: true, alert });
+    }
+
+    // Modo contingência
+    res.json({ success: true, alert: { _id: Date.now().toString(), text, sender: 'Nave Mãe', createdAt: new Date() } });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Filho consulta se há novo alerta não lido (Polling rápido)
+app.get('/api/alerts/latest', async (req, res) => {
+  try {
+    if (mongoose.connection.readyState !== 1) {
+      return res.json({ alert: null });
+    }
+
+    // Procura alerta não lido criado nos últimos 15 minutos
+    const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000);
+    const alert = await AlertMessage.findOne({
+      read: false,
+      createdAt: { $gte: fifteenMinutesAgo }
+    }).sort({ createdAt: -1 });
+
+    res.json({ alert });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Filho confirma o alerta ("Entendido / Já vou!")
+app.post('/api/alerts/:id/ack', async (req, res) => {
+  try {
+    if (mongoose.connection.readyState === 1) {
+      await AlertMessage.findByIdAndUpdate(req.params.id, {
+        read: true,
+        readAt: new Date()
+      });
+    }
+    res.json({ success: true, message: 'Alerta confirmado!' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Histórico dos últimos alertas para a Central de Comando
+app.get('/api/alerts/history', async (req, res) => {
+  try {
+    if (mongoose.connection.readyState !== 1) {
+      return res.json({ alerts: [] });
+    }
+
+    const alerts = await AlertMessage.find().sort({ createdAt: -1 }).limit(10);
+    res.json({ alerts });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

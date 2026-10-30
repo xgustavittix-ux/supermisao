@@ -91,6 +91,14 @@ const PetSchema = new mongoose.Schema({
   currentThought: { type: String, default: 'Oi, Gustavitti! Vamos explorar o cosmos hoje? 🚀' }
 }, { timestamps: true });
 
+// Schema de Alertas / Chamados da Família (Mãe ➔ Filho em Tempo Real)
+const AlertMessageSchema = new mongoose.Schema({
+  text: { type: String, required: true },
+  sender: { type: String, default: 'Nave Mãe' },
+  read: { type: Boolean, default: false },
+  readAt: { type: Date }
+}, { timestamps: true });
+
 module.exports = {
   Mission: mongoose.model('Mission', MissionSchema),
   MissionLog: mongoose.model('MissionLog', MissionLogSchema),
@@ -99,5 +107,6 @@ module.exports = {
   Transaction: mongoose.model('Transaction', TransactionSchema),
   EmotionalLog: mongoose.model('EmotionalLog', EmotionalLogSchema),
   User: mongoose.model('User', UserSchema),
-  Pet: mongoose.model('Pet', PetSchema)
+  Pet: mongoose.model('Pet', PetSchema),
+  AlertMessage: mongoose.model('AlertMessage', AlertMessageSchema)
 };

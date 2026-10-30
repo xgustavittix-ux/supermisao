@@ -157,5 +157,41 @@ const API = {
       headers: { 'Content-Type': 'application/json' }
     });
     return await res.json();
+  },
+
+  // --- Alertas em Tempo Real (Mãe ➔ Filho) ---
+  async sendAlert(text, sender = 'Nave Mãe') {
+    const res = await fetch(`${this.baseUrl}/alerts`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text, sender })
+    });
+    return await res.json();
+  },
+
+  async getLatestAlert() {
+    try {
+      const res = await fetch(`${this.baseUrl}/alerts/latest`);
+      return await res.json();
+    } catch(e) {
+      return { alert: null };
+    }
+  },
+
+  async ackAlert(id) {
+    const res = await fetch(`${this.baseUrl}/alerts/${id}/ack`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    return await res.json();
+  },
+
+  async getAlertHistory() {
+    try {
+      const res = await fetch(`${this.baseUrl}/alerts/history`);
+      return await res.json();
+    } catch(e) {
+      return { alerts: [] };
+    }
   }
 };

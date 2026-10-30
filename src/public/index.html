@@ -449,6 +449,28 @@
           </div>
         </section>
 
+        <!-- FERRAMENTA 3: ENVIAR ALERTA ESTELAR EM TEMPO REAL (MÃE ➔ FILHO) -->
+        <section style="margin-bottom: 20px;" class="progress-card" style="border-color: var(--color-gold);">
+          <div class="section-label" style="margin-bottom: 8px; color: var(--color-gold);">🚨 Chamado da Nave Mãe (Toca no Celular do Filho)</div>
+          <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">Envie um alerta imediato com alarme sonoro espacial, vibração e pop-up holográfico para Gustavitti.</p>
+          
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px;">
+            <button class="btn-action quick-alert-btn" data-msg="Vai escovar os dentes! 🪥" style="padding: 6px 10px; font-size: 11px; background: rgba(0,240,255,0.1); border-color: var(--color-cyan); color: var(--color-cyan);">🪥 Escovar dentes</button>
+            <button class="btn-action quick-alert-btn" data-msg="Hora do banho, explorador! 🚿" style="padding: 6px 10px; font-size: 11px; background: rgba(0,240,255,0.1); border-color: var(--color-cyan); color: var(--color-cyan);">🚿 Tomar banho</button>
+            <button class="btn-action quick-alert-btn" data-msg="Vem comer! A mesa está pronta! 🍽️" style="padding: 6px 10px; font-size: 11px; background: rgba(255,208,67,0.1); border-color: var(--color-gold); color: var(--color-gold);">🍽️ Vem comer</button>
+            <button class="btn-action quick-alert-btn" data-msg="Conferiu a mochila e uniforme para a escola? 🎒" style="padding: 6px 10px; font-size: 11px; background: rgba(138,43,226,0.1); border-color: var(--color-purple); color: #A78BFA);">🎒 Mochila/Uniforme</button>
+            <button class="btn-action quick-alert-btn" data-msg="Hora da lição de casa ou leitura! 📖" style="padding: 6px 10px; font-size: 11px; background: rgba(138,43,226,0.1); border-color: var(--color-purple); color: #A78BFA);">📖 Lição/Leitura</button>
+            <button class="btn-action quick-alert-btn" data-msg="Hora de dormir, astronauta! Luzes apagando! 🌙" style="padding: 6px 10px; font-size: 11px; background: rgba(239,68,68,0.1); border-color: #EF4444; color: #F87171);">🌙 Hora de dormir</button>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <input type="text" id="input-mother-alert" placeholder="Ou digite uma mensagem personalizada..." style="background: var(--bg-cosmos); border: 1px solid var(--border-subtle); color: var(--text-primary); padding: 10px; border-radius: var(--radius-sm); font-size: 13px;">
+            <button class="btn-action" id="btn-send-mother-alert" style="padding: 12px; background: linear-gradient(135deg, var(--color-gold), #F59E0B); color: #0B0E17; font-weight: 800; border: none;">🚀 Enviar Chamado Imediato!</button>
+          </div>
+
+          <div id="mother-alert-status" style="margin-top: 10px; font-size: 11px; color: var(--text-muted); text-align: center;">Nenhum chamado enviado recentemente.</div>
+        </section>
+
         <!-- CONTROLE DE NOTIFICAÇÕES (EXCLUSIVO DOS PAIS) -->
         <section style="margin-bottom: 20px;" class="progress-card" style="border-color: #8B5CF6;">
           <div class="section-label" style="margin-bottom: 10px; color: #A78BFA;">🔔 Notificações do Zupi & Lembretes</div>
@@ -558,6 +580,17 @@
           <span>📲 Instalar Aplicativo</span>
         </button>
         <button id="pwa-install-dismiss-btn" class="btn-pwa-dismiss">Mais tarde</button>
+      </div>
+    <!-- Modal Holográfico de Chamado da Mãe (Toca e vibra no Celular do Filho) -->
+    <div id="mother-alert-modal" class="mother-alert-overlay">
+      <div class="mother-alert-card">
+        <div class="mother-alert-badge">🚨 Chamado da Nave Mãe</div>
+        <div class="mother-alert-avatar">
+          <img src="/assets/fazendo%202%20%20com%20dedo.png" alt="Zupi Alerta">
+        </div>
+        <div class="mother-alert-title">Gustavitti, atenção! 🛰️</div>
+        <div class="mother-alert-message" id="mother-alert-text">Vai escovar os dentes! 🪥</div>
+        <button id="btn-ack-mother-alert" class="btn-mother-alert-ack">🚀 Entendido, já vou!</button>
       </div>
     </div>
 

@@ -475,7 +475,9 @@ document.addEventListener('DOMContentLoaded', () => {
         sleep:   () => { playTone(ctx, 330, 0.06, 'sine', 0, 0.4); playTone(ctx, 220, 0.04, 'sine', 0.35, 0.5); },
         sing:    () => { [523,659,784,880,784,659,523].forEach((f,i) => playTone(ctx, f, 0.06, 'sine', i*0.1, 0.18)); },
         explore: () => { playTone(ctx, 440, 0.05, 'sawtooth', 0, 0.05); playTone(ctx, 880, 0.07, 'sine', 0.05, 0.2); playTone(ctx, 1320, 0.05, 'sine', 0.2, 0.15); },
-        happy:   () => { [784, 1047].forEach((f,i) => playTone(ctx, f, 0.07, 'sine', i*0.1, 0.15)); }
+        happy:   () => { [784, 1047].forEach((f,i) => playTone(ctx, f, 0.07, 'sine', i*0.1, 0.15)); },
+        alertSiren: () => { [880, 1175, 880, 1175, 880, 1175].forEach((f,i) => playTone(ctx, f, 0.12, 'sawtooth', i*0.12, 0.1)); },
+        alertAck:   () => { [523, 659, 784, 1047].forEach((f,i) => playTone(ctx, f, 0.08, 'sine', i*0.07, 0.2)); }
       };
       if (sounds[type]) sounds[type]();
     } catch(e) { /* silencia se bloqueado */ }
@@ -1173,6 +1175,143 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem('pwa_banner_dismissed', 'true');
     });
   }
+
+  // -------------------------------------------------------------
+  // SISTEMA DE ALERTAS EM TEMPO REAL (MÃE ➔ FILHO)
+  // -------------------------------------------------------------
+  const motherAlertModal = document.getElementById('mother-alert-modal');
+  const motherAlertText = document.getElementById('mother-alert-text');
+  const btnAckMotherAlert = document.getElementById('btn-ack-mother-alert');
+  const btnSendMotherAlert = document.getElementById('btn-send-mother-alert');
+  const inputMotherAlert = document.getElementById('input-mother-alert');
+  const motherAlertStatus = document.getElementById('mother-alert-status');
+
+  let activeAlertId = null;
+  let alertSirenInterval = null;
+
+  // Envio de Alertas Rápidos pela Mãe (Botões de 1 clique)
+  document.querySelectorAll('.quick-alert-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const msg = btn.dataset.msg;
+      if (inputMotherAlert) inputMotherAlert.value = msg;
+      await dispatchMotherAlert(msg);
+    });
+  });
+
+  if (btnSendMotherAlert) {
+    btnSendMotherAlert.addEventListener('click', async () => {
+      const msg = inputMotherAlert ? inputMotherAlert.value.trim() : '';
+      if (!msg) {
+        alert('Por favor, digite ou selecione uma mensagem para enviar ao Gustavitti!');
+        return;
+      }
+      await dispatchMotherAlert(msg);
+    });
+  }
+
+  async function dispatchMotherAlert(text) {
+    if (btnSendMotherAlert) {
+      btnSendMotherAlert.disabled = true;
+      btnSendMotherAlert.textContent = 'Enviando chamado estelar... 🛰️';
+    }
+
+    try {
+      const res = await API.sendAlert(text);
+      if (res && res.success) {
+        zupiPlaySound('happy');
+        if (motherAlertStatus) {
+          motherAlertStatus.innerHTML = `✅ Chamado enviado: <strong>"${text}"</strong><br><span style="color: var(--color-cyan);">Tocando e vibrando no aparelho de Gustavitti agora! 📲</span>`;
+        }
+        if (inputMotherAlert) inputMotherAlert.value = '';
+      } else {
+        alert('Erro ao enviar chamado. Tente novamente.');
+      }
+    } catch(err) {
+      console.warn('Erro ao disparar alerta:', err);
+    } finally {
+      if (btnSendMotherAlert) {
+        btnSendMotherAlert.disabled = false;
+        btnSendMotherAlert.textContent = '🚀 Enviar Chamado Imediato!';
+      }
+    }
+  }
+
+  // Escuta Contínua no Aparelho do Filho (Polling a cada 4 segundos)
+  async function checkMotherAlerts() {
+    try {
+      const res = await API.getLatestAlert();
+      if (res && res.alert && res.alert._id) {
+        // Se encontramos um alerta recente não lido
+        if (res.alert._id !== activeAlertId) {
+          activeAlertId = res.alert._id;
+          triggerChildAlert(res.alert);
+        }
+      }
+    } catch(err) {
+      // Falha silenciosa de rede
+    }
+  }
+
+  function triggerChildAlert(alert) {
+    if (!motherAlertModal) return;
+
+    if (motherAlertText) {
+      motherAlertText.textContent = alert.text;
+    }
+
+    // Abre o pop-up holográfico
+    motherAlertModal.classList.add('active');
+
+    // Toca som de sirene espacial imediato
+    zupiPlaySound('alertSiren');
+
+    // Repete a sirene a cada 3.5s enquanto o filho não clicar em "Entendido"
+    if (alertSirenInterval) clearInterval(alertSirenInterval);
+    alertSirenInterval = setInterval(() => {
+      if (motherAlertModal.classList.contains('active')) {
+        zupiPlaySound('alertSiren');
+      } else {
+        clearInterval(alertSirenInterval);
+      }
+    }, 3500);
+
+    // Vibração forte no celular do filho
+    if (navigator.vibrate) {
+      navigator.vibrate([200, 100, 200, 100, 400]);
+    }
+
+    // Notificação nativa se o app estiver em background ou na tela inicial
+    if ('Notification' in window && Notification.permission === 'granted') {
+      try {
+        new Notification('🛰️ MENSAGEM DA NAVE MÃE!', {
+          body: alert.text,
+          icon: '/assets/icon-192.png',
+          tag: 'mother-alert'
+        });
+      } catch(e) {}
+    }
+  }
+
+  // Filho clica em "🚀 Entendido, já vou!"
+  if (btnAckMotherAlert) {
+    btnAckMotherAlert.addEventListener('click', async () => {
+      // Para o alarme
+      if (alertSirenInterval) clearInterval(alertSirenInterval);
+      motherAlertModal.classList.remove('active');
+
+      // Toca som de confirmação
+      zupiPlaySound('alertAck');
+
+      // Marca como lido no backend
+      if (activeAlertId) {
+        await API.ackAlert(activeAlertId);
+      }
+    });
+  }
+
+  // Inicia a escuta a cada 4 segundos
+  setInterval(checkMotherAlerts, 4000);
+  setTimeout(checkMotherAlerts, 1500);
 
   // Inicialização Geral
   loadDashboard();
