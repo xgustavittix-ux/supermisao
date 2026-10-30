@@ -1108,6 +1108,72 @@ document.addEventListener('DOMContentLoaded', () => {
     updateParentNotificationUI();
   };
 
+  // -------------------------------------------------------------
+  // Prompt de Instalação PWA (Primeira Visita / Favoritar como App)
+  // -------------------------------------------------------------
+  let deferredInstallPrompt = null;
+  const pwaBanner = document.getElementById('pwa-install-banner');
+  const btnPwaInstall = document.getElementById('pwa-install-confirm-btn');
+  const btnPwaDismiss = document.getElementById('pwa-install-dismiss-btn');
+  const pwaDescText = document.getElementById('pwa-banner-desc-text');
+
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  const isIos = /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredInstallPrompt = e;
+    checkAndShowInstallBanner();
+  });
+
+  function checkAndShowInstallBanner() {
+    if (isStandalone) return; // Já está rodando instalado como app
+    if (localStorage.getItem('pwa_installed') === 'true') return;
+    if (localStorage.getItem('pwa_banner_dismissed') === 'true') return;
+
+    if (isIos && pwaDescText) {
+      pwaDescText.innerHTML = 'Toque no botão <strong>Compartilhar</strong> (ícone com seta) e escolha <strong>"Adicionar à Tela de Início"</strong> para fixar o Gustavix! 📲';
+    }
+
+    setTimeout(() => {
+      if (pwaBanner) pwaBanner.classList.add('active');
+    }, 2000);
+  }
+
+  // Tenta exibir também em navegadores que atrasam o evento
+  setTimeout(() => {
+    checkAndShowInstallBanner();
+  }, 2500);
+
+  if (btnPwaInstall) {
+    btnPwaInstall.addEventListener('click', async () => {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        const { outcome } = await deferredInstallPrompt.userChoice;
+        if (outcome === 'accepted') {
+          localStorage.setItem('pwa_installed', 'true');
+        }
+        deferredInstallPrompt = null;
+        if (pwaBanner) pwaBanner.classList.remove('active');
+      } else if (isIos) {
+        alert('No seu iPhone ou iPad:\n1. Toque no botão Compartilhar (quadrado com seta no rodapé do Safari)\n2. Role e selecione "Adicionar à Tela de Início" 📲');
+        if (pwaBanner) pwaBanner.classList.remove('active');
+        localStorage.setItem('pwa_banner_dismissed', 'true');
+      } else {
+        alert('Para fixar o app:\n• No computador: clique no ícone de "Instalar" na barra de endereço do navegador (ao lado da estrela).\n• No celular: toque nos 3 pontinhos do menu e escolha "Instalar aplicativo" ou "Adicionar à tela inicial" 📲');
+        if (pwaBanner) pwaBanner.classList.remove('active');
+        localStorage.setItem('pwa_banner_dismissed', 'true');
+      }
+    });
+  }
+
+  if (btnPwaDismiss) {
+    btnPwaDismiss.addEventListener('click', () => {
+      if (pwaBanner) pwaBanner.classList.remove('active');
+      localStorage.setItem('pwa_banner_dismissed', 'true');
+    });
+  }
+
   // Inicialização Geral
   loadDashboard();
 });
